@@ -34,25 +34,22 @@ config.mqtt = {
     /**
      * Port where the MQTT Broker is listening
      */
-    port: 1883
-
+    //port: 1883,
+    port: 8883, //security port
+    
     /**
      * User name for the IoTAgent in the MQTT broker, if authentication is activated.
      */
-    //username: ''
+    //username: 'figuardian',
 
     /**
      * Password for the IoTAgent in the MQTT broker, if authentication is activated.
      */
-    //password: ''
+    //password: 'ufu',    
+    cert: '/etc/mosquitto/easy/localhost.server.crt',
+    key: '/etc/mosquitto/easy/localhost.server.key'
 };
-
-config.amqp = {
-    exchange: 'iota-exchange',
-    queue: 'iotaqueue',
-    options: {durable: true}
-};
-
+    
 /**
  * Conmfiguration for the HTTP transport binding.
  */
@@ -62,6 +59,7 @@ config.http = {
      */
     port: 7896
 };
+
 
 config.iota = {
     /**
@@ -73,7 +71,7 @@ config.iota = {
      * When this flag is active, the IoTAgent will add the TimeInstant attribute to every entity created, as well
      * as a TimeInstant metadata to each attribute, with the current timestamp.
      */
-    timestamp: true,
+    timestamp: false,
     
     /**
      * Context Broker configuration. Defines the connection information to the instance of the Context Broker where
@@ -83,12 +81,27 @@ config.iota = {
         /**
          * Host where the Context Broker is located.
          */
-        host: 'localhost',
+        host: 'http://localhost',
 
         /**
          * Port where the Context Broker is listening.
          */
-        port: '1026'
+        port: '1027'
+        //PORT 1027 SSL IN IOT BROKER
+        //PORT 1026 NORMAL PORT IN IOT BROKER
+    },
+
+    
+    
+    /**
+     * The ngsi request will be with ssl connections
+     */
+    ssl: {
+        active: true,
+        keyFile: 'certificados/server/key.pem',
+        certFile: 'certificados/server/cert.pem',
+        //ca: 'certificados/mqtt.perm',
+        rejectUnauthorized: false
     },
 
     /**
@@ -98,39 +111,72 @@ config.iota = {
         /**
          * Port where the IoT Agent will be listening for requests.
          */
-        port: 4061
+        port: 4061,
+        ssl : {
+            portSSL: 4062,
+        
+            /**
+             * This flag activates the HTTPS protocol in the server. The endpoint always listen to the indicated port
+             * independently of the chosen protocol.
+             */
+            active: true,
+
+            /**
+             * Key file to use for codifying the HTTPS requests. Only mandatory when the flag active is true.
+             */
+            keyFile: 'certificados/server/key.pem',
+
+            /**
+             * SSL Certificate to present to the clients. Only mandatory when the flag active is true.
+             */
+            certFile: 'certificados/server/cert.pem',
+
+            ca: '',
+            requestCert: false,
+            rejectUnauthorized: false                 
+        }       
     },
 
+    authentication: {
+        enabled: true,
+        protocol: 'http://',
+        host: 'localhost',
+        port: '5000',
+        user: 'caio',
+        password: 'caio',
+        domain: 'figuardian'
+    },
+    
     /**
      * Configuration for the IoT Manager. If the IoT Agent is part of a configuration composed of multiple IoTAgents
      * coordinated by an IoT Manager, this section defines the information that will be used to connect with that manager.
      */
-    //iotManager: {
+//    iotManager: {
         /**
          * Host where the IoT Manager is located.
          */
-        //host: 'localhost',
+//       host: 'localhost',
 
         /**
          * Port where the IoT Manager is listening.
          */
-        //port: 8082,
+//       port: 8082,
 
         /**
          * Path where the IoT Manager accepts subscriptions.
          */
-        //path: '/protocols',
+//       path: '/protocols',
 
         /**
          * Protocol code identifying this IoT Agent.
          */
-        //protocol: 'MQTT_UL',
+//        protocol: 'MQTT_UL',
 
         /**
          * Textual description of this IoT Agent.
          */
-        //description: 'MQTT Ultralight 2.0 IoT Agent (Node.js version)'
-    //},
+//       description: 'MQTT Ultralight 2.0 IoT Agent (Node.js version)'
+//   },
 
     /**
      * Default resource of the IoT Agent. This value must be different for every IoT Agent connecting to the IoT
@@ -139,7 +185,7 @@ config.iota = {
     defaultResource: '/iot/d',
 
     /**
-     * Defines the configuration for the Device Registry, where all the information about devices and configuration
+  	   * Defines the configuration for the Device Registry, where all the information about devices and configuration
      * groups will be stored. There are currently just two types of registries allowed:
      *
      * - 'memory': transient memory-based repository for testing purposes. All the information in the repository is
@@ -149,7 +195,7 @@ config.iota = {
      *             from the 'mongoDb' configuration property.
      */
     deviceRegistry: {
-        type: 'mongodb'
+        type: 'memory'
     },
 
     /**
@@ -184,25 +230,56 @@ config.iota = {
      *  Types array for static configuration of services. Check documentation in the IoTAgent Library for Node.js for
      *  further details:
      *
-     *      https://github.com/telefonicaid/iotagent-node-lib#type-configuration
+     *      https://github.com/telefonicaid/iotagent-node-lib#type-configuration     
      */
-    types: {},
+    types: {
+        'Room': {
+            apikey: 'apikey3',
+            type: 'Room',
+            service: 'figuardian',
+            subservice: '/ufu',
+            trust: 'd0fa707131204b56a46103c53e67fab7',
+            cbHost: 'http://localhost:1027',
+            commands: [{ "object_id": "z", "name": "turn", "type": "string" }],
+            lazy: [],
+            attributes: [
+                {
+                    name: 'statusConfigActive',
+                    type: 'Boolean',
+                    object_id: 'a'
+                },
+                {
+                    name: 'luminescenceConfigActive',
+                    type: 'Lumens',
+                    object_id: 'b'                    
+                }                
+            ]
+        },
+        'Car': {
+            apikey: 'apikey31',
+            type: 'Car',
+            trust: 'b17509-Trust',
+        }        
+    },
+
+	//types: {},
 
     /**
      * Default service, for IOTA installations that won't require preregistration.
      */
-    service: 'howtoService',
+    service: 'universidade',
 
     /**
      * Default subservice, for IOTA installations that won't require preregistration.
      */
-    subservice: '/howto',
+    subservice: '/subteste',
 
     /**
      * URL Where the IOTA Will listen for incoming updateContext and queryContext requests (for commands and passive
      * attributes). This URL will be sent in the Context Registration requests.
      */
-    providerUrl: 'http://localhost:4061',
+    providerUrl: 'https://192.168.1.9:4062',//security connection
+    
 
     /**
      * Default maximum expire date for device registrations.
@@ -212,18 +289,23 @@ config.iota = {
     /**
      * Default type, for IOTA installations that won't require preregistration.
      */
-    defaultType: 'Thing'
+    defaultType: 'Thing',
+    pollingExpiration: 14890837853,
+    pollingDaemonFrequency:  20    
 };
+
 
 /**
  * Default API Key, to use with device that have been provisioned without a Configuration Group.
  */
-config.defaultKey = 'TEF';
+config.defaultKey = 'apikey-mqtt';
 
 /**
  * Default transport protocol when no transport is provisioned through the Device Provisioning API.
  */
 config.defaultTransport = 'MQTT';
 
+
 module.exports = config;
+
 
