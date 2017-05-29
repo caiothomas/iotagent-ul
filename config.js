@@ -142,7 +142,7 @@ config.iota = {
         protocol: 'http://',
         host: 'localhost',
         port: '80',
-        path: '/orion/token.php',
+        path: '/orion/getToken.php',
         user: 'caio',
         password: 'caio',
         domain: 'figuardian'
