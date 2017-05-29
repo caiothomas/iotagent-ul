@@ -141,11 +141,26 @@ config.iota = {
         enabled: true,
         protocol: 'http://',
         host: 'localhost',
-        port: '5000',
+        port: '80',
+        path: '/orion/token.php',
         user: 'caio',
         password: 'caio',
         domain: 'figuardian'
     },
+
+    /**
+     *
+    authentication: {
+        enabled: true,
+        protocol: 'http://',
+        host: 'localhost',
+        port: '5000',
+        path: '/v3/auth/tokens',
+        user: 'caio',
+        password: 'caio',
+        domain: 'figuardian'
+    },
+    */  
     
     /**
      * Configuration for the IoT Manager. If the IoT Agent is part of a configuration composed of multiple IoTAgents
