@@ -34,18 +34,18 @@ config.mqtt = {
     /**
      * Port where the MQTT Broker is listening
      */
-    //port: 1883,
+//    port: 1883,
     port: 8883, //security port
     
     /**
      * User name for the IoTAgent in the MQTT broker, if authentication is activated.
      */
-    //username: 'figuardian',
+    username: 'figuardian',
 
     /**
      * Password for the IoTAgent in the MQTT broker, if authentication is activated.
      */
-    //password: 'ufu',    
+    password: 'ufu',    
     cert: '/etc/mosquitto/easy/localhost.server.crt',
     key: '/etc/mosquitto/easy/localhost.server.key'
 };
@@ -86,7 +86,7 @@ config.iota = {
         /**
          * Port where the Context Broker is listening.
          */
-        port: '1027'
+        port: '1026'
         //PORT 1027 SSL IN IOT BROKER
         //PORT 1026 NORMAL PORT IN IOT BROKER
     },
@@ -160,7 +160,7 @@ config.iota = {
         password: 'caio',
         domain: 'figuardian'
     },
-    */  
+    */    
     
     /**
      * Configuration for the IoT Manager. If the IoT Agent is part of a configuration composed of multiple IoTAgents
@@ -249,7 +249,7 @@ config.iota = {
      */
     types: {
         'Room': {
-            apikey: 'apikey3',
+            apikey: 'apikeyDevice1',//cada type deve ter uma API KEY diferente
             type: 'Room',
             service: 'figuardian',
             subservice: '/ufu',
@@ -271,9 +271,26 @@ config.iota = {
             ]
         },
         'Car': {
-            apikey: 'apikey31',
+            apikey: 'apikeyDevice2',
             type: 'Car',
+            service: 'figuardian',
+            subservice: '/ufu',            
             trust: 'b17509-Trust',
+            cbHost: 'http://localhost:1027',
+            commands: [{ "object_id": "z", "name": "turn", "type": "string" }],
+            lazy: [],
+            attributes: [
+                {
+                    name: 'statusConfigActive',
+                    type: 'Boolean',
+                    object_id: 'a'
+                },
+                {
+                    name: 'luminescenceConfigActive',
+                    type: 'Lumens',
+                    object_id: 'b'                    
+                }                
+            ]            
         }        
     },
 
@@ -294,6 +311,7 @@ config.iota = {
      * attributes). This URL will be sent in the Context Registration requests.
      */
     providerUrl: 'https://192.168.1.9:4062',//security connection
+//    providerUrl: 'http://192.168.1.9:4061',
     
 
     /**
@@ -322,5 +340,6 @@ config.defaultTransport = 'MQTT';
 
 
 module.exports = config;
+
 
 

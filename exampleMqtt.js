@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var mqtt = require('mqtt');
 var path = require('path');
@@ -13,9 +13,9 @@ var KEY = fs.readFileSync('/etc/mosquitto/easy/localhost.server.key');
 var PORT = 1883;
 
 var options = {
-  port:  8883||PORT,
-  key: KEY,
- cert: CERT,
+  port:  PORT || 8883,
+//  key: KEY,
+// cert: CERT,
   //cafile: cafile,
   //username: 'figuardian',
   //password: 'ufu',  
@@ -30,8 +30,8 @@ client.on('connect', function () {
 });
  
 
-client.subscribe('/apikey3/sensor01/attrs');
-client.subscribe('/apikey3/sensor01/cmd');
+client.subscribe('/apikeyDevice1/sensor01/attrs');
+client.subscribe('/apikeyDevice1/sensor01/cmd');
 
 client.on('message', function (topic, message) {  
   console.log("mensagem: [%s]", message);
@@ -40,7 +40,7 @@ client.on('message', function (topic, message) {
     var r  = String(message).match(re);     
     if(r){
       if(r[2]=='@turn')
-        client.publish("/apikey3/sensor01/cmdexe", 'sensor01@turn|'+Date.now())
+        client.publish("/apikeyDevice1/sensor01/cmdexe", 'sensor01@turn|'+Date.now())
     }    
   }
 });
@@ -51,11 +51,16 @@ client.on('error', function (err) {
 })
 
 function send(){
-  client.publish('/apikey3/sensor01/attrs', 'a|'+Math.floor((Math.random() * 100) + 1)+'#t|'+Math.floor((Math.random() * 100) + 1)+"#b|on", {qos: 0, retain: false});  
+  client.publish('/apikeyDevice1/sensor01/attrs', 'a|'+Math.floor((Math.random() * 100) + 1)+'#t|'+Math.floor((Math.random() * 100) + 1)+"#b|on", {qos: 0, retain: false});  
 }
 
 function send2(){
   client.publish('/apikey-mqtt/sensor02/attrs/a', ""+Math.floor((Math.random() * 100) + 1)+"");
+}
+
+
+function send3(){
+  client.publish('/apikeyDevice2/sensor03/attrs', 'a|'+Math.floor((Math.random() * 100) + 1)+'#t|'+Math.floor((Math.random() * 100) + 1)+"#b|on", {qos: 0, retain: false});  
 }
 
   
@@ -63,8 +68,8 @@ function send2(){
 //setTimeout(send, 1000);
 //setTimeout(send2, 5000);
 
-setInterval(send, 10000);
-//setInterval(send2, 4000);
+setInterval(send,  10000);
+setInterval(send3, 7000);
 
 /*
 var clienteSimples = mqtt.connect("mqtt://localhost:1883");
@@ -91,3 +96,4 @@ function send2(value){
 }
 setInterval(send2, 1000);
 */
+
