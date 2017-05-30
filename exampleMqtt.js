@@ -13,12 +13,12 @@ var KEY = fs.readFileSync('/etc/mosquitto/easy/localhost.server.key');
 var PORT = 1883;
 
 var options = {
-  port:  PORT || 8883,
-//  key: KEY,
-// cert: CERT,
+  port: 8883 || PORT ,
+  key: KEY,
+ cert: CERT,
   //cafile: cafile,
-  //username: 'figuardian',
-  //password: 'ufu',  
+  username: 'figuardian',
+  password: 'ufu',  
   rejectUnauthorized: false
 }
 
