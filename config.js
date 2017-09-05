@@ -34,20 +34,20 @@ config.mqtt = {
     /**
      * Port where the MQTT Broker is listening
      */
-//    port: 1883,
-    port: 8883, //security port
+    port: 1883,
+//    port: 8883, //security port
     
     /**
      * User name for the IoTAgent in the MQTT broker, if authentication is activated.
      */
-    username: 'figuardian',
+//    username: 'figuardian',
 
     /**
      * Password for the IoTAgent in the MQTT broker, if authentication is activated.
      */
-    password: 'ufu',    
-    cert: '/etc/mosquitto/easy/localhost.server.crt',
-    key: '/etc/mosquitto/easy/localhost.server.key'
+ //   password: 'ufu',    
+ //   cert: '/etc/mosquitto/easy/localhost.server.crt',
+ //   key: '/etc/mosquitto/easy/localhost.server.key'
 };
     
 /**
@@ -97,7 +97,7 @@ config.iota = {
      * The ngsi request will be with ssl connections
      */
     ssl: {
-        active: true,
+        active: false,
         keyFile: 'certificados/server/key.pem',
         certFile: 'certificados/server/cert.pem',
         //ca: 'certificados/mqtt.perm',
@@ -143,11 +143,12 @@ config.iota = {
         host: 'localhost',
         port: '80',
         path: '/orion/getToken.php',
+        checktoken: '/orion/token.php',//verifica o token das requisições
         user: 'caio',
         password: 'caio',
         domain: 'figuardian'
     },
-
+    
     /**
      *
     authentication: {
@@ -254,7 +255,8 @@ config.iota = {
             service: 'figuardian',
             subservice: '/ufu',
             trust: 'd0fa707131204b56a46103c53e67fab7',
-            cbHost: 'http://localhost:1027',
+            cbHost: 'http://localhost:1026',
+//            cbHost: 'https://localhost:1027',
             commands: [{ "object_id": "z", "name": "turn", "type": "string" }],
             lazy: [],
             attributes: [
@@ -267,7 +269,12 @@ config.iota = {
                     name: 'luminescenceConfigActive',
                     type: 'Lumens',
                     object_id: 'b'                    
-                }                
+                },
+                {
+                    name: 'temperatureActive',
+                    type: 'float',
+                    object_id: 't'
+                }                 
             ]
         },
         'Car': {
@@ -276,7 +283,7 @@ config.iota = {
             service: 'figuardian',
             subservice: '/ufu',            
             trust: 'b17509-Trust',
-            cbHost: 'http://localhost:1027',
+            cbHost: 'http://localhost:1026',
             commands: [{ "object_id": "z", "name": "turn", "type": "string" }],
             lazy: [],
             attributes: [
@@ -302,7 +309,7 @@ config.iota = {
     service: 'universidade',
 
     /**
-     * Default subservice, for IOTA installations that won't require preregistration.
+	     * Default subservice, for IOTA installations that won't require preregistration.
      */
     subservice: '/subteste',
 
@@ -310,9 +317,9 @@ config.iota = {
      * URL Where the IOTA Will listen for incoming updateContext and queryContext requests (for commands and passive
      * attributes). This URL will be sent in the Context Registration requests.
      */
-    providerUrl: 'https://192.168.1.9:4062',//security connection
-//    providerUrl: 'http://192.168.1.9:4061',
-    
+   // providerUrl: 'https://192.168.1.8:4062',//security connection
+//    providerUrl: 'http://192.168.1.8:4061',
+      providerUrl: 'http://192.168.1.8:4061',  
 
     /**
      * Default maximum expire date for device registrations.
