@@ -1,0 +1,14 @@
+version: '2'
+services:
+ mongo:
+  image: mongo:3.4
+ iotagent_mqtt:
+  image: iotagentul/mqtt
+  build: .
+  ports:
+   - "4061:4061"
+   - "4062:4062"
+  links:
+   - mongo
+  depends_on:
+   - mongo

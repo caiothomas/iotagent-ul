@@ -29,7 +29,7 @@ config.mqtt = {
     /**
      * Host where the MQTT Broker is located.
      */
-    host: 'localhost',
+    host: '192.168.1.8',
 
     /**
      * Port where the MQTT Broker is listening
@@ -124,12 +124,12 @@ config.iota = {
             /**
              * Key file to use for codifying the HTTPS requests. Only mandatory when the flag active is true.
              */
-            keyFile: 'certificados/server/key.pem',
+            keyFile: '/iotagent-ul/certificados/server/key.pem',
 
             /**
              * SSL Certificate to present to the clients. Only mandatory when the flag active is true.
              */
-            certFile: 'certificados/server/cert.pem',
+            certFile: '/iotagent-ul/certificados/server/cert.pem',
 
             ca: '',
             requestCert: false,
@@ -138,7 +138,7 @@ config.iota = {
     },
 
     authentication: {
-        enabled: true,
+        enabled: false,
         protocol: 'http://',
         host: 'localhost',
         port: '80',
@@ -211,7 +211,7 @@ config.iota = {
      *             from the 'mongoDb' configuration property.
      */
     deviceRegistry: {
-        type: 'memory'
+        type: 'mongodb'
     },
 
     /**
@@ -223,13 +223,13 @@ config.iota = {
          * Host where MongoDB is located. If the MongoDB used is a replicaSet, this property will contain a
          * comma-separated list of the instance names or IPs.
          */
-        host: 'localhost',
+        host: 'mongo',
 
         /**
          * Port where MongoDB is listening. In the case of a replicaSet, all the instances are supposed to be listening
          * in the same port.
          */
-        port: '27017',
+        port: '',
 
         /**
          * Name of the Mongo database that will be created to store IOTAgent data.
